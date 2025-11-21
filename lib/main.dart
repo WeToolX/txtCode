@@ -91,7 +91,7 @@ class _TextProcessorPageState extends State<TextProcessorPage> {
   final Map<EmojiPlatform, List<String>> _emojiPacks = {
     EmojiPlatform.wx: ['😀', '😁', '😊', '🤔', '😎', '😘', '🥳', '👍','😆','😅','😉','😢','😭','😡','😴','😱',
     '🤤','🤮','😷','🤒','🤕','🤧','🤨','🥰',
-    '😋','😜','🤪','🤫','🤭','😇','🤡','👻',],
+    '😋','😜','🤪','🤫','🤭','😇','🤡','👻'],
     EmojiPlatform.qq: [
       '(萌)',
       '(笑)',
@@ -128,11 +128,15 @@ class _TextProcessorPageState extends State<TextProcessorPage> {
     ],
   };
 
-  final Map<ZeroWidthType, String> _zeroWidthChars = const {
+    final Map<ZeroWidthType, String> _zeroWidthChars = const {
     ZeroWidthType.zeroWidthSpace: '\u200b',
     ZeroWidthType.zeroWidthNonJoiner: '\u200c',
     ZeroWidthType.zeroWidthJoiner: '\u200d',
+    ZeroWidthType.leftToRightMark: '\u200e',
+    ZeroWidthType.rightToLeftMark: '\u200f',
     ZeroWidthType.wordJoiner: '\u2060',
+    ZeroWidthType.functionApplication: '\u2061',
+    ZeroWidthType.invisibleSeparator: '\u2063',
   };
 
   @override
@@ -700,12 +704,12 @@ class _TextProcessorPageState extends State<TextProcessorPage> {
   }
 
   int _countZeroWidth(String text) {
-    final reg = RegExp('[\\u200b\\u200c\\u200d\\u2060]');
+    final reg = RegExp('[\\u200b\\u200c\\u200d\\u200e\\u200f\\u2060\\u2061\\u2063]');
     return reg.allMatches(text).length;
   }
 
   String _markZeroWidth(String text) {
-    final reg = RegExp('[\\u200b\\u200c\\u200d\\u2060]');
+    final reg = RegExp('[\\u200b\\u200c\\u200d\\u200e\\u200f\\u2060\\u2061\\u2063]');
     return text.replaceAll(reg, '[0宽字符]');
   }
 
@@ -745,8 +749,16 @@ class _TextProcessorPageState extends State<TextProcessorPage> {
         return '0宽非连接符 (\\u200C)';
       case ZeroWidthType.zeroWidthJoiner:
         return '0宽连接符 (\\u200D)';
+      case ZeroWidthType.leftToRightMark:
+        return '左至右标记 (\\u200E)';
+      case ZeroWidthType.rightToLeftMark:
+        return '右至左标记 (\\u200F)';
       case ZeroWidthType.wordJoiner:
         return '单词连接 (\\u2060)';
+      case ZeroWidthType.functionApplication:
+        return '函数应用 (\\u2061)';
+      case ZeroWidthType.invisibleSeparator:
+        return '隐形分隔 (\\u2063)';
     }
   }
 
